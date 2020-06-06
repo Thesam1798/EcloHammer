@@ -1,0 +1,15 @@
+hammers:
+  hammer:
+    material: GOLD_PICKAXE
+    lore:
+      - §7
+      - §7Cet outil mine du §63x3x2§7,
+      - §7très utile pour miner plus rapidement
+      - §7
+      - §cNe le réparer qu'avec /repair
+      - §cou /repair all pour éviter les bug!
+    durability: 300
+    name: §c§l✖ Hammer ✖
+    enchantments:
+      DURABILITY: 6
+      DIG_SPEED: 3

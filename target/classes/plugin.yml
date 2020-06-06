@@ -1,8 +1,0 @@
-name: EcloHammer
-version: 1.0-SNAPSHOT
-author: Eclosia
-main: life.eclosia.hammer.Main
-commands:
-  hammer:
-    description: Commande pour gérer un hammer
-    permission: hammer.use

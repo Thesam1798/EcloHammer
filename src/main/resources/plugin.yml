@@ -6,3 +6,4 @@ commands:
   hammer:
     description: Commande pour gérer un hammer
     permission: hammer.use
+    usage: "Usage: /hammer give <player> <hammer name>"

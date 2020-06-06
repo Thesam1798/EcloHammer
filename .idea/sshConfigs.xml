@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="SshConfigs">
-    <configs>
-      <sshConfig authType="PASSWORD" host="90.63.132.120" id="b7428667-2744-4642-8f2b-1aab7e299750" port="23" nameFormat="DESCRIPTIVE" username="deamon" />
-    </configs>
-  </component>
-</project>
