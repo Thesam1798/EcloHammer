@@ -5,6 +5,7 @@ import life.eclosia.hammer.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.configuration.MemorySection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
@@ -44,7 +45,13 @@ public class Hammer implements Serializable {
         this.Lore = (ArrayList<String>) lore;
         this.DefaultLore = (ArrayList<String>) ((ArrayList<String>) lore).clone();
         this.Enchantments = new HashMap<>();
-        ((HashMap<String, Integer>) enchantments).forEach((s, integer) -> this.Enchantments.put(Enchantment.getByName(s), integer));
+
+        if (enchantments instanceof MemorySection) {
+            ((MemorySection) enchantments).getKeys(true).forEach(enchant -> this.Enchantments.put(Enchantment.getByName(enchant), ((MemorySection) enchantments).getInt(enchant, 1)));
+        } else {
+            ((HashMap<String, Integer>) enchantments).forEach((s, integer) -> this.Enchantments.put(Enchantment.getByName(s), integer));
+        }
+
     }
 
     public Hammer(Hammer hammer) {
@@ -55,6 +62,38 @@ public class Hammer implements Serializable {
         this.DefaultLore = hammer.getDefaultLore();
         this.Enchantments = new HashMap<>();
         hammer.getEnchantments().forEach((s, integer) -> this.Enchantments.put(Enchantment.getByName(s), integer));
+    }
+
+    public static String GiveHammer(String targetName, String hammerName) {
+        Player target = Bukkit.getPlayer(targetName);
+
+        if (target != null && target.isOnline()) {
+            if (target.getInventory().firstEmpty() != -1) {
+                if (!ListHammer.list.isEmpty()) {
+
+                    if (ListHammer.list.containsKey(hammerName)) {
+                        Hammer hammer = ListHammer.list.get(hammerName);
+                        ItemStack hammerItem = hammer.getItemStack();
+
+                        target.getInventory().addItem(hammerItem);
+                        target.updateInventory();
+                        return Main.PLUGIN_CHAT_PREFIX + ChatColor.GRAY +
+                                "Vous avez reçu " + hammerItem.getItemMeta().getDisplayName() + ChatColor.GRAY + "x1 " + ChatColor.GRAY + "!";
+                    }
+
+                    System.out.println(ListHammer.list.toString());
+
+                    return Main.PLUGIN_CHAT_PREFIX + ChatColor.RED + "Imposible de trouver un hammer avec le nom suivant : " + hammerName;
+
+                } else {
+                    return Main.PLUGIN_CHAT_PREFIX + ChatColor.RED + "Merci de configurer le plugin";
+                }
+            } else {
+                return Main.PLUGIN_CHAT_PREFIX + ChatColor.RED + "L'inventaire du joueur est plein !";
+            }
+        } else {
+            return Main.PLUGIN_CHAT_PREFIX + ChatColor.RED + "Le joueur n'est pas en ligne";
+        }
     }
 
     public ItemStack getItemStack() {
@@ -85,9 +124,14 @@ public class Hammer implements Serializable {
 
             Enchantments.forEach((enchantment, level) -> hammerItemMeta.addEnchant(enchantment, level, true));
 
+            hammerItemMeta.addEnchant(Enchantment.DURABILITY, 100, true);
+
             hammerItemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             hammerItemMeta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
             hammerItemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+            hammerItemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+            hammerItemMeta.addItemFlags(ItemFlag.HIDE_DESTROYS);
+            hammerItemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
 
             _hammerItem.setItemMeta(hammerItemMeta);
             _hammerItem.setDurability((short) 0);
@@ -151,36 +195,6 @@ public class Hammer implements Serializable {
                     _hammerItem.getItemMeta().getDisplayName().equals(stack.getItemMeta().getDisplayName());
         } else {
             return false;
-        }
-    }
-
-    public static String GiveHammer(String targetName, String hammerName) {
-        Player target = Bukkit.getPlayer(targetName);
-
-        if (target != null && target.isOnline()) {
-            if (target.getInventory().firstEmpty() != -1) {
-                if (ListHammer.list != null && !ListHammer.list.isEmpty()) {
-
-                    if (ListHammer.list.containsKey(hammerName)) {
-                        Hammer hammer = ListHammer.list.get(hammerName);
-                        ItemStack hammerItem = hammer.getItemStack();
-
-                        target.getInventory().addItem(hammerItem);
-                        target.updateInventory();
-                        return Main.PLUGIN_CHAT_PREFIX + ChatColor.GRAY +
-                                "Vous avez reçu " + hammerItem.getItemMeta().getDisplayName() + ChatColor.GRAY + "x1 " + ChatColor.GRAY + "!";
-                    }
-
-                    return Main.PLUGIN_CHAT_PREFIX + ChatColor.RED + "Imposible de trouver un hammer avec le nom suivant : " + hammerName;
-
-                } else {
-                    return Main.PLUGIN_CHAT_PREFIX + ChatColor.RED + "Merci de configurer le plugin";
-                }
-            } else {
-                return Main.PLUGIN_CHAT_PREFIX + ChatColor.RED + "L'inventaire du joueur est plein !";
-            }
-        } else {
-            return Main.PLUGIN_CHAT_PREFIX + ChatColor.RED + "Le joueur n'est pas en ligne";
         }
     }
 }

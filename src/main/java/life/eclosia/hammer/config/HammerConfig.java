@@ -8,7 +8,8 @@ public class HammerConfig {
     private static FileConfiguration config;
 
     public static void load() {
-        Main.PLUGIN.getConfig().options().copyDefaults(false);
+        Main.PLUGIN.saveDefaultConfig();
+        Main.PLUGIN.getConfig();
         save();
         config = Main.PLUGIN.getConfig();
     }

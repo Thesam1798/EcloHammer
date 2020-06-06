@@ -50,7 +50,7 @@ public class ListHammer implements Serializable {
                 MemorySection hammerInfo = ((MemorySection) o);
                 if (hammerInfo.get("material") != null && hammerInfo.get("name") != null && hammerInfo.get("lore") != null) {
                     Hammer hammer = new Hammer(hammerInfo.get("material"), hammerInfo.get("name"), hammerInfo.get("durability"), hammerInfo.get("lore"), hammerInfo.get("enchantments"));
-                    list.put(hammer.getName(), hammer);
+                    list.put(hammer.getSimpleName(), hammer);
                 }
             });
         }

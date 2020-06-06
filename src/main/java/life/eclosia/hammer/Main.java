@@ -6,9 +6,12 @@ import life.eclosia.hammer.command.HammerGiveCommand;
 import life.eclosia.hammer.command.HammerHelpCommand;
 import life.eclosia.hammer.config.HammerConfig;
 import life.eclosia.hammer.events.HammerEvent;
+import life.eclosia.hammer.object.hammer.ListHammer;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.logging.Level;
 
 
 public class Main extends JavaPlugin {
@@ -19,15 +22,24 @@ public class Main extends JavaPlugin {
     @Override
     public void onEnable() {
         System.out.println("EcloHammer demarre...");
-        PLUGIN = this;
 
-        HammerConfig.load();
+        try {
+            PLUGIN = this;
 
-        CommandHelper.AddCommand((JavaPlugin) PLUGIN, "hammer", new HammerCommand());
-        CommandHelper.AddCommand((JavaPlugin) PLUGIN, "hammer", new HammerHelpCommand());
-        CommandHelper.AddCommand((JavaPlugin) PLUGIN, "hammer", new HammerGiveCommand());
+            HammerConfig.load();
+            ListHammer.loadFromConfig();
 
-        getServer().getPluginManager().registerEvents(new HammerEvent(this), this);
+            CommandHelper.AddCommand((JavaPlugin) PLUGIN, "hammer", new HammerCommand());
+            CommandHelper.AddCommand((JavaPlugin) PLUGIN, "hammer", new HammerHelpCommand());
+            CommandHelper.AddCommand((JavaPlugin) PLUGIN, "hammer", new HammerGiveCommand());
+
+            getServer().getPluginManager().registerEvents(new HammerEvent(this), this);
+
+        } catch (Exception e) {
+            this.getLogger().log(Level.WARNING, PLUGIN_CHAT_PREFIX + ChatColor.RED + "--------- --------- --------- [ERROR] --------- --------- ---------");
+            this.getLogger().log(Level.WARNING, e.getMessage());
+            this.getLogger().log(Level.WARNING, PLUGIN_CHAT_PREFIX + ChatColor.RED + "--------- --------- --------- [ERROR] --------- --------- ---------");
+        }
     }
 
     @Override

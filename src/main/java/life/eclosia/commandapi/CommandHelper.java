@@ -12,16 +12,24 @@ public final class CommandHelper {
 
     public static void AddCommand(JavaPlugin plugin, String commandName, SubCommand newSubCommand) {
         try {
-            if (plugin == null) return;
+            if (plugin == null || commandName == null || newSubCommand == null) return;
             if (commandManager == null) commandManager = new CommandManager();
 
             commandManager.addSubCommand(newSubCommand);
             plugin.getCommand(commandName).setExecutor(commandManager);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 
     public static List<SubCommand> GetAllCommand() {
         return commandManager.getSubCommands();
+    }
+
+    public static CommandManager getCommandManager() {
+        return commandManager;
+    }
+
+    public static void setCommandManager(CommandManager commandManager) {
+        CommandHelper.commandManager = commandManager;
     }
 }

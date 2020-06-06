@@ -42,22 +42,34 @@ public class HammerEvent implements Listener {
         if (!valid[0] || hammers[0] == null) return;
 
         assert itemInHand != null;
-        NBTItem nbtItem = (new NBTItem(itemInHand));
+
+        // Récupération de la durabiliter moins 1
+        int dura = (new NBTItem(itemInHand)).getInteger("DURA") - 1;
+
+        //Suppresion de l'item
         player.getInventory().remove(itemInHand);
 
-        int dura = nbtItem.getInteger("DURA") - 1;
+        //Création d'une copy avec les NBT
+        NBTItem nbtItem = (new NBTItem((new Hammer(hammers[0])).getItemStack()));
 
+        //Récupération du Lore de base
         ArrayList<String> lore = (new Hammer(hammers[0])).getDefaultLore();
 
+        //Verif
         if (lore == null) return;
+
+        //Remove if exist
         lore.removeIf(s -> s.contains(ChatColor.DARK_GREEN + "Durability : "));
 
+        //Remove last return line
         if (lore.get(lore.size() - 1).equalsIgnoreCase("")) {
             lore.remove(lore.get(lore.size() - 1));
         }
 
+        //Add return line
         lore.add("");
 
+        //Si la sura est inférieur ou equals a 0
         if (dura <= 0) {
             lore.add(ChatColor.DARK_GREEN + "Durability : " + ChatColor.RED + 0 + ChatColor.DARK_GREEN + "/" + ChatColor.RED + hammers[0].getDurability() + ChatColor.RESET);
             event.setCancelled(true);
@@ -65,7 +77,7 @@ public class HammerEvent implements Listener {
             return;
         } else {
             lore.add(ChatColor.DARK_GREEN + "Durability : " + ChatColor.RED + dura + ChatColor.DARK_GREEN + "/" + ChatColor.RED + hammers[0].getDurability() + ChatColor.RESET);
-            nbtItem.setInteger("DURA", dura - 1);
+            nbtItem.setInteger("DURA", dura);
         }
 
         itemInHand = nbtItem.getItem();
