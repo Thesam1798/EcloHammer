@@ -23,7 +23,7 @@ public class Hammer implements Serializable {
     private final Material Tool;
     private final String Name;
     private final Integer Durability;
-    private final ArrayList<String> Lore;
+    private ArrayList<String> Lore;
     private final ArrayList<String> DefaultLore;
     private final HashMap<Enchantment, Integer> Enchantments;
     private ItemStack _hammerItem;
@@ -40,7 +40,7 @@ public class Hammer implements Serializable {
     @SuppressWarnings("unchecked")
     public Hammer(Object material, Object name, Object durability, Object lore, Object enchantments) {
         this.Tool = Material.matchMaterial(String.valueOf(material));
-        this.Name = (String) name;
+        this.Name = ChatColor.translateAlternateColorCodes('&',(String) name);
         this.Durability = (Integer) durability;
         this.Lore = (ArrayList<String>) lore;
         this.DefaultLore = (ArrayList<String>) ((ArrayList<String>) lore).clone();
@@ -115,9 +115,11 @@ public class Hammer implements Serializable {
             ItemMeta hammerItemMeta = _hammerItem.getItemMeta();
             hammerItemMeta.setDisplayName(ChatColor.RESET + Name + ChatColor.RESET);
 
-            if (Lore != null) {
-                Lore.add("");
-                Lore.add(ChatColor.DARK_GREEN + "Durability : " + ChatColor.RED + nbtItem.getInteger("DURA") + ChatColor.DARK_GREEN + "/" + ChatColor.MAGIC + getDurability() + ChatColor.RESET);
+            this.Lore = this.DefaultLore;
+
+            if (this.Lore != null) {
+                this.Lore.add("");
+                this.Lore.add(ChatColor.DARK_GREEN + "Durability : " + ChatColor.RED + nbtItem.getInteger("DURA") + ChatColor.DARK_GREEN + "/" + ChatColor.MAGIC + getDurability() + ChatColor.RESET);
             }
 
             hammerItemMeta.setLore(Lore);
@@ -191,8 +193,7 @@ public class Hammer implements Serializable {
             if (!valid.get()) return false;
 
             return _hammerItem.getType() == stack.getType() &&
-                    (new NBTItem(_hammerItem).getBoolean("HAMMER")).equals((new NBTItem(stack)).getBoolean("HAMMER")) &&
-                    _hammerItem.getItemMeta().getDisplayName().equals(stack.getItemMeta().getDisplayName());
+                    (new NBTItem(_hammerItem).getBoolean("HAMMER")).equals((new NBTItem(stack)).getBoolean("HAMMER"));
         } else {
             return false;
         }

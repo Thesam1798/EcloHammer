@@ -34,21 +34,13 @@ public class HammerCommand extends SubCommand {
     }
 
     @Override
-    public void perform(Player player, String[] strings) {
-        try {
-            HammerHelpCommand.action(player);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void performPlayer(Player player, String[] strings) {
+        HammerHelpCommand.action(player);
     }
 
     @Override
-    public void perform(ConsoleCommandSender player, String[] args) {
-        try {
-            HammerHelpCommand.action(player);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void performConsole(ConsoleCommandSender player, String[] args) {
+        HammerHelpCommand.action(player);
     }
 
     @Override

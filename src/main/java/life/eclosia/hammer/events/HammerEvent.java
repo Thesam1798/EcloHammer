@@ -29,7 +29,7 @@ public class HammerEvent implements Listener {
         final Hammer[] hammers = {null};
 
         ItemStack itemInHand = player.getItemInHand();
-        if (ListHammer.list != null && !ListHammer.list.isEmpty() && player.getGameMode().equals(GameMode.SURVIVAL) && itemInHand != null) {
+        if (!ListHammer.list.isEmpty() && player.getGameMode().equals(GameMode.SURVIVAL) && itemInHand != null) {
             ItemStack finalItemInHand = itemInHand;
             ListHammer.list.forEach((s, hammer) -> {
                 if (!valid[0]) {
@@ -62,12 +62,9 @@ public class HammerEvent implements Listener {
         lore.removeIf(s -> s.contains(ChatColor.DARK_GREEN + "Durability : "));
 
         //Remove last return line
-        if (lore.get(lore.size() - 1).equalsIgnoreCase("")) {
+        if (lore.get(lore.size() - 1).equalsIgnoreCase("") || ChatColor.stripColor(lore.get(lore.size() - 1)).equalsIgnoreCase("")) {
             lore.remove(lore.get(lore.size() - 1));
         }
-
-        //Add return line
-        lore.add("");
 
         //Si la sura est inférieur ou equals a 0
         if (dura <= 0) {
@@ -83,6 +80,7 @@ public class HammerEvent implements Listener {
         itemInHand = nbtItem.getItem();
         ItemMeta itemMeta = itemInHand.getItemMeta();
         itemMeta.setLore(lore);
+        itemMeta.setDisplayName((new Hammer(hammers[0])).getName() + " " + ChatColor.RESET + ChatColor.RED + dura);
         itemInHand.setItemMeta(itemMeta);
 
         World world = player.getWorld();

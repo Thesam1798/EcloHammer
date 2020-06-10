@@ -7,6 +7,11 @@
     <groupId>life.eclosia</groupId>
     <artifactId>EcloHammer</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>Hammer</name>
+    <url>https://eclosia.life</url>
+    <description>Starter for plugin</description>
 
     <build>
         <plugins>
@@ -20,20 +25,20 @@
                         <goals>
                             <goal>single</goal>
                         </goals>
+                        <configuration>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+                            <finalName>Eclosia-${name}-${version}</finalName>
+                            <appendAssemblyId>false</appendAssemblyId>
+                        </configuration>
                     </execution>
                 </executions>
-                <configuration>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                    <finalName>${artifactId}-${version}</finalName>
-                    <appendAssemblyId>false</appendAssemblyId>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.1</version>
+                <version>3.2.4</version>
                 <executions>
                     <execution>
                         <id>shade</id>
@@ -44,10 +49,26 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <filters>
+                        <filter>
+                            <artifact>de.tr7zw:*</artifact>
+                            <excludes>
+                                <exclude>LICENSE</exclude>
+                                <exclude>META-INF/MANIFEST.MF</exclude>
+                                <exclude>META-INF/maven/de.tr7zw/**</exclude>
+                                <exclude>de/tr7zw/annotations/**</exclude>
+                                <exclude>de/tr7zw/changeme/**</exclude>
+                            </excludes>
+                        </filter>
+                    </filters>
                     <relocations>
                         <relocation>
                             <pattern>de.tr7zw.changeme.nbtapi</pattern>
-                            <shadedPattern>life.eclosia.nbtapi</shadedPattern>
+                            <shadedPattern>life.eclosia.tr7zw.nbtapi</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>de.tr7zw.annotations</pattern>
+                            <shadedPattern>life.eclosia.tr7zw.annotations</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
@@ -113,6 +134,15 @@
             <version>1.10.19</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.powermock/powermock-api-mockito -->
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito</artifactId>
+            <version>1.7.4</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
 </project>

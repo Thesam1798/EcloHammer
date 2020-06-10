@@ -2,7 +2,6 @@ package life.eclosia.hammer.command;
 
 import life.eclosia.commandapi.CommandHelper;
 import life.eclosia.commandapi.commands.SubCommand;
-import life.eclosia.hammer.object.hammer.ListHammer;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -12,19 +11,19 @@ import java.util.List;
 
 public class HammerHelpCommand extends SubCommand {
 
-    public static void action(CommandSender sender) throws Exception {
-        if (ListHammer.list == null || ListHammer.list.isEmpty()) ListHammer.loadFromConfig();
-        if (ListHammer.list.isEmpty()) return;
+    public static void action(CommandSender sender) {
 
         sender.sendMessage(ChatColor.RESET + "");
         sender.sendMessage(ChatColor.DARK_GREEN + "------------------ " + ChatColor.LIGHT_PURPLE + "Hammer Helper" + ChatColor.DARK_GREEN + " ------------------");
         sender.sendMessage(ChatColor.RESET + "");
 
         CommandHelper.GetAllCommand().forEach(subCommand -> {
-            sender.sendMessage(ChatColor.DARK_GREEN + "Command : " + ChatColor.GREEN + ChatColor.ITALIC + subCommand.getName());
-            sender.sendMessage(ChatColor.GREEN + subCommand.getDescription());
-            sender.sendMessage(ChatColor.GREEN + "" + ChatColor.ITALIC + subCommand.getSyntax());
-            sender.sendMessage(ChatColor.DARK_GREEN + "");
+            if (subCommand.getSyntax().contains("/hammer")) {
+                sender.sendMessage(ChatColor.DARK_GREEN + "Command : " + ChatColor.GREEN + ChatColor.ITALIC + subCommand.getName());
+                sender.sendMessage(ChatColor.GREEN + subCommand.getDescription());
+                sender.sendMessage(ChatColor.GREEN + "" + ChatColor.ITALIC + subCommand.getSyntax());
+                sender.sendMessage(ChatColor.DARK_GREEN + "");
+            }
         });
 
         sender.sendMessage(ChatColor.DARK_GREEN + "--------------------------------------------------");
@@ -53,25 +52,17 @@ public class HammerHelpCommand extends SubCommand {
 
     @Override
     public Integer getArgsNumber() {
-        return 0;
+        return 1;
     }
 
     @Override
-    public void perform(Player player, String[] strings) {
-        try {
-            action(player);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void performPlayer(Player player, String[] strings) {
+        action(player);
     }
 
     @Override
-    public void perform(ConsoleCommandSender player, String[] args) {
-        try {
-            action(player);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void performConsole(ConsoleCommandSender player, String[] args) {
+        action(player);
     }
 
     @Override

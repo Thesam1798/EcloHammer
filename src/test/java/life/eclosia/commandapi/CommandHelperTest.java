@@ -6,6 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
 
 import static org.junit.Assert.assertEquals;
 
@@ -17,8 +18,8 @@ public class CommandHelperTest {
 
     @Before
     public void setUp() {
-        javaPlugin = Mockito.mock(JavaPlugin.class);
-        subCommand = Mockito.mock(SubCommand.class);
+        javaPlugin = PowerMockito.mock(JavaPlugin.class);
+        subCommand = PowerMockito.mock(SubCommand.class);
 
         CommandManager commandManager = Mockito.mock(CommandManager.class);
         CommandHelper.setCommandManager(commandManager);

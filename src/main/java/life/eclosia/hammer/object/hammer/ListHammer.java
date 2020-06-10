@@ -1,6 +1,7 @@
 package life.eclosia.hammer.object.hammer;
 
 import life.eclosia.hammer.config.HammerConfig;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.enchantments.Enchantment;
@@ -21,7 +22,7 @@ public class ListHammer implements Serializable {
         for (String name : list.keySet()) {
             Hammer hammer = list.get(name);
             HashMap<String, Object> info = new HashMap<>();
-            info.put("name", hammer.getName());
+            info.put("name", ChatColor.translateAlternateColorCodes('&',hammer.getName()));
             info.put("material", hammer.getTool().name());
             info.put("lore", hammer.getLore());
             info.put("durability", hammer.getDurability());
