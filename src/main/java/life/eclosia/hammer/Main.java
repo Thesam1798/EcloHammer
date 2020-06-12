@@ -4,6 +4,7 @@ import life.eclosia.commandapi.CommandHelper;
 import life.eclosia.hammer.command.HammerCommand;
 import life.eclosia.hammer.command.HammerGiveCommand;
 import life.eclosia.hammer.command.HammerHelpCommand;
+import life.eclosia.hammer.command.HammerRepairCommand;
 import life.eclosia.hammer.config.HammerConfig;
 import life.eclosia.hammer.events.HammerEvent;
 import life.eclosia.hammer.object.hammer.ListHammer;
@@ -16,7 +17,7 @@ import java.util.logging.Level;
 
 public class Main extends JavaPlugin {
 
-    public static final String PLUGIN_CHAT_PREFIX = ChatColor.GRAY + "[" + ChatColor.GOLD + "EcloHammer" + ChatColor.GRAY + "] ";
+    public static final String PLUGIN_CHAT_PREFIX = ChatColor.GRAY + "[" + ChatColor.GOLD + "EcloHammer" + ChatColor.GRAY + "] " + ChatColor.RESET + "";
     public static Plugin PLUGIN;
 
     @Override
@@ -32,6 +33,7 @@ public class Main extends JavaPlugin {
             CommandHelper.AddCommand((JavaPlugin) PLUGIN, "hammer", new HammerCommand());
             CommandHelper.AddCommand((JavaPlugin) PLUGIN, "hammer", new HammerHelpCommand());
             CommandHelper.AddCommand((JavaPlugin) PLUGIN, "hammer", new HammerGiveCommand());
+            CommandHelper.AddCommand((JavaPlugin) PLUGIN, "hammer", new HammerRepairCommand());
 
             getServer().getPluginManager().registerEvents(new HammerEvent(this), this);
 

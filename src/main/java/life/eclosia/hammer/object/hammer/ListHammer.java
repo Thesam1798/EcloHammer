@@ -27,6 +27,7 @@ public class ListHammer implements Serializable {
             info.put("lore", hammer.getLore());
             info.put("durability", hammer.getDurability());
             info.put("enchantments", hammer.getEnchantments());
+            info.put("repairTime", hammer.getRepairTime());
 
             listForSave.put(hammer.getSimpleName(), info);
         }
@@ -40,7 +41,7 @@ public class ListHammer implements Serializable {
         HashMap<Enchantment, Integer> enchantments = new HashMap<>();
         enchantments.put(Enchantment.DIG_SPEED, 3);
         enchantments.put(Enchantment.DURABILITY, 6);
-        Hammer test = new Hammer(Material.GOLD_PICKAXE, "§c§l✖ Hammer ✖", 300, lore, enchantments);
+        Hammer test = new Hammer(Material.GOLD_PICKAXE, "§c§l✖ Hammer ✖", 300, lore, enchantments, 5);
 
         list.put(test.getSimpleName(), test);
     }
@@ -50,11 +51,13 @@ public class ListHammer implements Serializable {
             ((MemorySection) HammerConfig.getConfig().get("hammers")).getValues(false).forEach((s, o) -> {
                 MemorySection hammerInfo = ((MemorySection) o);
                 if (hammerInfo.get("material") != null && hammerInfo.get("name") != null && hammerInfo.get("lore") != null) {
-                    Hammer hammer = new Hammer(hammerInfo.get("material"), hammerInfo.get("name"), hammerInfo.get("durability"), hammerInfo.get("lore"), hammerInfo.get("enchantments"));
+                    Hammer hammer = new Hammer(hammerInfo.get("material"), hammerInfo.get("name"), hammerInfo.get("durability"), hammerInfo.get("lore"), hammerInfo.get("enchantments"), hammerInfo.get("repairTime"));
                     list.put(hammer.getSimpleName(), hammer);
                 }
             });
         }
+
+        save();
     }
 
 }

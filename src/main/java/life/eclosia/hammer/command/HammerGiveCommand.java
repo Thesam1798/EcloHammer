@@ -59,11 +59,6 @@ public class HammerGiveCommand extends SubCommand {
     }
 
     private void action(CommandSender sender, String[] args) throws Exception {
-
-        for (String arg : args) {
-            sender.sendMessage(ChatColor.RED + "" + ChatColor.MAGIC + "DEBUG" + ChatColor.RESET + " : " + arg);
-        }
-
         if (ListHammer.list.isEmpty()) ListHammer.loadFromConfig();
         if (ListHammer.list.isEmpty())
             sender.sendMessage(Main.PLUGIN_CHAT_PREFIX + ChatColor.RED + "ERROR : Imposible de charger la config");

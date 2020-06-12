@@ -8,5 +8,5 @@
  - [x] Vérification des enchantement
  - [x] Vérification du nom
  - [x] Utilisation de NBT Tag pour la sécurité
- - [ ] Command de réparation
+ - [x] Command de réparation
  - [ ] Finalisation des TU

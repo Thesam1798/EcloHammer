@@ -16,6 +16,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Stream;
 
 @SuppressWarnings("unchecked")
 public class Hammer implements Serializable {
@@ -23,28 +24,31 @@ public class Hammer implements Serializable {
     private final Material Tool;
     private final String Name;
     private final Integer Durability;
-    private ArrayList<String> Lore;
     private final ArrayList<String> DefaultLore;
     private final HashMap<Enchantment, Integer> Enchantments;
+    private final Integer RepairTime;
+    private ArrayList<String> Lore;
     private ItemStack _hammerItem;
 
-    public Hammer(Material material, String name, Integer durability, ArrayList<String> lore, HashMap<Enchantment, Integer> enchantments) {
+    public Hammer(Material material, String name, Integer durability, ArrayList<String> lore, HashMap<Enchantment, Integer> enchantments, Integer repairTime) {
         this.Tool = material;
         this.Name = name;
         this.Durability = durability;
         this.Lore = lore;
         this.DefaultLore = (ArrayList<String>) lore.clone();
         this.Enchantments = enchantments;
+        this.RepairTime = repairTime;
     }
 
     @SuppressWarnings("unchecked")
-    public Hammer(Object material, Object name, Object durability, Object lore, Object enchantments) {
+    public Hammer(Object material, Object name, Object durability, Object lore, Object enchantments, Object RepairTime) {
         this.Tool = Material.matchMaterial(String.valueOf(material));
-        this.Name = ChatColor.translateAlternateColorCodes('&',(String) name);
+        this.Name = ChatColor.translateAlternateColorCodes('&', (String) name);
         this.Durability = (Integer) durability;
         this.Lore = (ArrayList<String>) lore;
         this.DefaultLore = (ArrayList<String>) ((ArrayList<String>) lore).clone();
         this.Enchantments = new HashMap<>();
+        this.RepairTime = (Integer) RepairTime;
 
         if (enchantments instanceof MemorySection) {
             ((MemorySection) enchantments).getKeys(true).forEach(enchant -> this.Enchantments.put(Enchantment.getByName(enchant), ((MemorySection) enchantments).getInt(enchant, 1)));
@@ -61,7 +65,9 @@ public class Hammer implements Serializable {
         this.Lore = hammer.Lore;
         this.DefaultLore = hammer.getDefaultLore();
         this.Enchantments = new HashMap<>();
+        this.RepairTime = hammer.RepairTime;
         hammer.getEnchantments().forEach((s, integer) -> this.Enchantments.put(Enchantment.getByName(s), integer));
+        this._hammerItem = getItemStack();
     }
 
     public static String GiveHammer(String targetName, String hammerName) {
@@ -81,8 +87,6 @@ public class Hammer implements Serializable {
                                 "Vous avez reçu " + hammerItem.getItemMeta().getDisplayName() + ChatColor.GRAY + "x1 " + ChatColor.GRAY + "!";
                     }
 
-                    System.out.println(ListHammer.list.toString());
-
                     return Main.PLUGIN_CHAT_PREFIX + ChatColor.RED + "Imposible de trouver un hammer avec le nom suivant : " + hammerName;
 
                 } else {
@@ -96,19 +100,30 @@ public class Hammer implements Serializable {
         }
     }
 
+    public static ItemStack RepairHammer(ItemStack inHand) {
+        try {
+            Stream<Hammer> list = ListHammer.list.values().stream().filter(hammer -> hammer.similar(inHand)).distinct();
+
+            list.forEach(hammer -> {
+                inHand.setItemMeta(hammer.getItemStack().getItemMeta());
+                inHand.setType(hammer.getTool());
+            });
+
+            return inHand;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     public ItemStack getItemStack() {
-
-        System.out.println(Tool);
-        System.out.println(Name);
-        System.out.println(Durability);
-        System.out.println(Lore);
-
         if (_hammerItem == null) {
             _hammerItem = new ItemStack(Tool, 1);
 
             NBTItem nbtItem = new NBTItem(_hammerItem);
             nbtItem.setInteger("DURA", getDurability());
             nbtItem.setBoolean("HAMMER", true);
+            nbtItem.setInteger("REPAIR", getRepairTime());
+            nbtItem.setBoolean(getSimpleName(), true);
 
             _hammerItem = nbtItem.getItem();
 
@@ -149,6 +164,10 @@ public class Hammer implements Serializable {
         return Name;
     }
 
+    public Integer getRepairTime() {
+        return RepairTime;
+    }
+
     public Integer getDurability() {
         if (Durability == null) return 1;
         return Durability;
@@ -180,7 +199,7 @@ public class Hammer implements Serializable {
             getItemStack();
         }
 
-        if (stack != null) {
+        if (stack != null && _hammerItem.getType() == stack.getType()) {
 
             AtomicBoolean valid = new AtomicBoolean(true);
 
@@ -192,8 +211,7 @@ public class Hammer implements Serializable {
 
             if (!valid.get()) return false;
 
-            return _hammerItem.getType() == stack.getType() &&
-                    (new NBTItem(_hammerItem).getBoolean("HAMMER")).equals((new NBTItem(stack)).getBoolean("HAMMER"));
+            return (new NBTItem(stack).getKeys()).contains(getSimpleName()) && (new NBTItem(stack)).getBoolean("HAMMER");
         } else {
             return false;
         }
