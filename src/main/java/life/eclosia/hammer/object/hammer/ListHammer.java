@@ -6,15 +6,14 @@ import org.bukkit.Material;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.enchantments.Enchantment;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-public class ListHammer implements Serializable {
+public class ListHammer {
 
-    private static final HashMap<String, HashMap<String, Object>> listForSave = new HashMap<>();
     public static final HashMap<String, Hammer> list = new HashMap<>();
+    private static final HashMap<String, HashMap<String, Object>> listForSave = new HashMap<>();
 
     public static void save() throws Exception {
         //mock();
@@ -22,7 +21,7 @@ public class ListHammer implements Serializable {
         for (String name : list.keySet()) {
             Hammer hammer = list.get(name);
             HashMap<String, Object> info = new HashMap<>();
-            info.put("name", ChatColor.translateAlternateColorCodes('&',hammer.getName()));
+            info.put("name", ChatColor.translateAlternateColorCodes('&', hammer.getName()));
             info.put("material", hammer.getTool().name());
             info.put("lore", hammer.getLore());
             info.put("durability", hammer.getDurability());

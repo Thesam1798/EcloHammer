@@ -46,7 +46,12 @@ public class Main extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        System.out.println("EcloHammer s'arrete...");
-        PLUGIN = null;
+        try {
+            ListHammer.save();
+            System.out.println("EcloHammer s'arrete...");
+            PLUGIN = null;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
