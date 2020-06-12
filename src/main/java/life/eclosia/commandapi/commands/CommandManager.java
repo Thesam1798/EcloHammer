@@ -86,25 +86,33 @@ public class CommandManager implements TabExecutor {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
 
-        if (!(sender instanceof Player)) return null;
+        try {
+            if (!(sender instanceof Player) || args == null || getSubCommands() == null) return null;
 
-        ArrayList<String> subcommandsArguments = new ArrayList<>();
+            ArrayList<String> subcommandsArguments = new ArrayList<>();
 
-        if (args.length == 1) {
-            //Si il n'a que le nom de la command, retour de toute les commandes
-            getSubCommands().forEach(subCommand -> subcommandsArguments.add(subCommand.getCommand()));
-            return subcommandsArguments;
-        } else if (args.length >= 2) {
-            //Si il y a 2 ou plus d'arguement call de la méthode de toute les commandes
-            getSubCommands().forEach(subCommand -> {
-                if (args[0].equalsIgnoreCase(subCommand.getCommand()) && subCommand.getArgsNumber() != 0) {
-                    subcommandsArguments.addAll(subCommand.getSubcommandArguments((Player) sender, args));
-                }
-            });
-        }
+            if (args.length == 1) {
+                //Si il n'a que le nom de la command, retour de toute les commandes
+                getSubCommands().forEach(subCommand -> subcommandsArguments.add(subCommand.getCommand()));
+                return subcommandsArguments;
+            } else if (args.length >= 2) {
+                //Si il y a 2 ou plus d'arguement call de la méthode de toute les commandes
+                getSubCommands().forEach(subCommand -> {
+                    if (subCommand != null && args[0] != null && args[0].equalsIgnoreCase(subCommand.getCommand()) && subCommand.getArgsNumber() != 0) {
+                        if (subCommand.getArgsNumber() == args.length) {
+                            List<String> temp = subCommand.getSubcommandArguments((Player) sender, args);
+                            if (temp != null)
+                                subcommandsArguments.addAll(temp);
+                        }
+                    }
+                });
+            }
 
-        if (!subcommandsArguments.isEmpty()) {
-            return subcommandsArguments;
+            if (!subcommandsArguments.isEmpty()) {
+                return subcommandsArguments;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return null;
