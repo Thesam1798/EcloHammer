@@ -9,4 +9,6 @@
 -  [x] Vérification du nom
 -  [x] Utilisation de NBT Tag pour la sécurité
 -  [x] Command de réparation
+-  [ ] Fix de Faction
+-  [ ] Fix de Worldguard
 -  [ ] Finalisation des TU
